@@ -1,1 +1,626 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AWS Resume-as-Code Architecture</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0b0f13;
+      --surface:   #111820;
+      --surface2:  #161f29;
+      --border:    #1e2d3d;
+      --border2:   #2a3f54;
+      --text:      #e8eef4;
+      --muted:     #7a91a8;
+      --aws:       #ff9900;
+      --aws-dim:   #cc7a00;
+      --green:     #00c48c;
+      --green-dim: #00956a;
+      --blue:      #4a9eff;
+      --blue-dim:  #2b7de0;
+      --amber:     #ffb347;
+      --amber-dim: #e08c1a;
+      --teal:      #00d4d4;
+      --teal-dim:  #009898;
+      --violet:    #a78bfa;
+      --violet-dim:#7c5ce8;
+      --red:       #ff6b6b;
+      --line:      rgba(255,255,255,0.12);
+      --glow-aws:  rgba(255,153,0,0.15);
+      --glow-blue: rgba(74,158,255,0.15);
+      --glow-green:rgba(0,196,140,0.15);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      overflow-x: hidden;
+    }
+
+    /* Subtle grid bg */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      width: min(1140px, 100%);
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+    .aws-badge {
+      background: var(--aws);
+      color: #1a0800;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 4px 10px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      border: 1px solid var(--border2);
+      padding: 3px 9px;
+      border-radius: 4px;
+    }
+    h1 {
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      line-height: 1.1;
+    }
+    .subtitle {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 400;
+    }
+
+    /* Main diagram card */
+    .diagram-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.15s forwards;
+    }
+    .diagram-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--aws), transparent);
+      opacity: 0.5;
+    }
+
+    /* Flow diagram */
+    .flow {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      width: 100%;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    /* Each node */
+    .node {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      animation: nodeIn 0.5s ease forwards;
+    }
+    .node:nth-child(1)  { animation-delay: 0.3s; }
+    .node:nth-child(3)  { animation-delay: 0.5s; }
+    .node:nth-child(5)  { animation-delay: 0.7s; }
+    .node:nth-child(7)  { animation-delay: 0.9s; }
+    .node:nth-child(9)  { animation-delay: 1.1s; }
+    .node:nth-child(11) { animation-delay: 1.3s; }
+
+    .node-box {
+      width: 110px;
+      height: 110px;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid transparent;
+      position: relative;
+      cursor: default;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .node-box:hover {
+      transform: translateY(-3px);
+    }
+
+    /* colour variants */
+    .node-box.gray  { background: var(--surface2); border-color: var(--border2);    box-shadow: 0 4px 24px rgba(0,0,0,0.4); }
+    .node-box.green { background: rgba(0,196,140,0.08); border-color: var(--green-dim); box-shadow: 0 4px 24px rgba(0,196,140,0.12); }
+    .node-box.green:hover { box-shadow: 0 8px 32px rgba(0,196,140,0.25); }
+    .node-box.blue  { background: rgba(74,158,255,0.08); border-color: var(--blue-dim);  box-shadow: 0 4px 24px rgba(74,158,255,0.12); }
+    .node-box.blue:hover  { box-shadow: 0 8px 32px rgba(74,158,255,0.25); }
+    .node-box.amber { background: rgba(255,179,71,0.08); border-color: var(--amber-dim); box-shadow: 0 4px 24px rgba(255,179,71,0.12); }
+    .node-box.amber:hover { box-shadow: 0 8px 32px rgba(255,179,71,0.25); }
+    .node-box.lime  { background: rgba(0,212,212,0.08); border-color: var(--teal-dim);   box-shadow: 0 4px 24px rgba(0,212,212,0.12); }
+    .node-box.lime:hover  { box-shadow: 0 8px 32px rgba(0,212,212,0.25); }
+    .node-box.violet{ background: rgba(167,139,250,0.08); border-color: var(--violet-dim); box-shadow: 0 4px 24px rgba(167,139,250,0.12); }
+    .node-box.violet:hover{ box-shadow: 0 8px 32px rgba(167,139,250,0.25); }
+
+    .node-icon {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .node-icon svg { width: 100%; height: 100%; }
+
+    .node-name {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-align: center;
+      line-height: 1.2;
+    }
+    .node-name.green  { color: var(--green); }
+    .node-name.blue   { color: var(--blue); }
+    .node-name.amber  { color: var(--amber); }
+    .node-name.teal   { color: var(--teal); }
+    .node-name.violet { color: var(--violet); }
+    .node-name.muted  { color: var(--muted); }
+
+    .node-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* Connector arrow */
+    .connector {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 0 2px;
+      opacity: 0;
+      animation: fadeIn 0.4s ease forwards;
+    }
+    .connector:nth-child(2)  { animation-delay: 0.4s; }
+    .connector:nth-child(4)  { animation-delay: 0.6s; }
+    .connector:nth-child(6)  { animation-delay: 0.8s; }
+    .connector:nth-child(8)  { animation-delay: 1.0s; }
+    .connector:nth-child(10) { animation-delay: 1.2s; }
+
+    .conn-line {
+      width: 48px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--border2), var(--border2));
+      border-radius: 2px;
+      position: relative;
+    }
+    .conn-line::after {
+      content: '';
+      position: absolute;
+      right: -1px;
+      top: -4px;
+      border: 5px solid transparent;
+      border-left: 8px solid var(--border2);
+    }
+    .conn-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* Animated pulse on connector lines */
+    .conn-line.active {
+      background: linear-gradient(90deg, var(--border2), var(--aws));
+      animation: pulse-line 2s ease-in-out infinite;
+    }
+    @keyframes pulse-line {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    /* Legend + footer */
+    .meta-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      margin-top: 32px;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.5s ease 1.5s forwards;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+    }
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .terraform-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(167,139,250,0.08);
+      border: 1px solid var(--violet-dim);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--violet);
+      font-weight: 600;
+    }
+
+    /* Security callout */
+    .security-note {
+      margin-top: 20px;
+      background: rgba(255,107,107,0.06);
+      border: 1px solid rgba(255,107,107,0.2);
+      border-left: 3px solid var(--red);
+      border-radius: 0 8px 8px 0;
+      padding: 10px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.6;
+      opacity: 0;
+      animation: fadeUp 0.5s ease 1.7s forwards;
+    }
+    .security-note strong { color: var(--red); }
+
+    /* AWS outer ring on diagram card */
+    .aws-frame {
+      border: 1px dashed rgba(255,153,0,0.2);
+      border-radius: 14px;
+      padding: 24px 16px 20px;
+      position: relative;
+      margin-bottom: 0;
+    }
+    .aws-frame-label {
+      position: absolute;
+      top: -11px;
+      left: 20px;
+      background: var(--aws);
+      color: #1a0800;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 2px 10px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes nodeIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.95); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* Tooltip */
+    .node-box[data-tip] { cursor: pointer; }
+    .tooltip {
+      position: absolute;
+      bottom: calc(100% + 10px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e2d3d;
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text);
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s;
+      z-index: 10;
+      line-height: 1.5;
+      text-align: center;
+    }
+    .node-box:hover .tooltip { opacity: 1; }
+    .tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%; left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: var(--border2);
+    }
+
+    .node-wrap { position: relative; }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-top">
+      <span class="aws-badge">AWS</span>
+      <span class="tag">serverless</span>
+      <span class="tag">static hosting</span>
+      <span class="tag">terraform</span>
+    </div>
+    <h1>Resume-as-Code architecture</h1>
+    <p class="subtitle">// CloudFront + S3 + Route 53 + ACM + OAC</p>
+  </div>
+
+  <!-- Diagram card -->
+  <div class="diagram-card">
+
+    <div class="aws-frame">
+      <span class="aws-frame-label">AWS cloud</span>
+
+      <div class="flow">
+
+        <!-- USER -->
+        <div class="node">
+          <div class="node-wrap">
+            <div class="node-box gray" data-tip="">
+              <div class="tooltip">Origin of all HTTPS requests<br>to your resume domain</div>
+              <div class="node-icon">
+                <!-- Monitor / browser icon -->
+                <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="6" y="8" width="32" height="22" rx="3" stroke="#7a91a8" stroke-width="2"/>
+                  <line x1="14" y1="36" x2="30" y2="36" stroke="#7a91a8" stroke-width="2" stroke-linecap="round"/>
+                  <line x1="22" y1="30" x2="22" y2="36" stroke="#7a91a8" stroke-width="2"/>
+                  <circle cx="22" cy="19" r="5" stroke="#a0b4c8" stroke-width="1.5"/>
+                  <line x1="26" y1="23" x2="29" y2="26" stroke="#a0b4c8" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <span class="node-name muted">Browser</span>
+            </div>
+          </div>
+          <span class="node-label">user</span>
+        </div>
+
+        <!-- arrow -->
+        <div class="connector">
+          <div class="conn-line active"></div>
+          <span class="conn-label">HTTPS</span>
+        </div>
+
+        <!-- ROUTE 53 -->
+        <div class="node">
+          <div class="node-wrap">
+            <div class="node-box green" data-tip="">
+              <div class="tooltip">DNS resolution<br>yourname.com → CloudFront</div>
+              <div class="node-icon">
+                <!-- Globe / DNS icon -->
+                <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="22" cy="22" r="14" stroke="#00c48c" stroke-width="2"/>
+                  <ellipse cx="22" cy="22" rx="6" ry="14" stroke="#00c48c" stroke-width="1.5"/>
+                  <line x1="8" y1="22" x2="36" y2="22" stroke="#00c48c" stroke-width="1.5"/>
+                  <line x1="10" y1="15" x2="34" y2="15" stroke="#00c48c" stroke-width="1" opacity="0.6"/>
+                  <line x1="10" y1="29" x2="34" y2="29" stroke="#00c48c" stroke-width="1" opacity="0.6"/>
+                </svg>
+              </div>
+              <span class="node-name green">Route 53</span>
+            </div>
+          </div>
+          <span class="node-label">DNS</span>
+        </div>
+
+        <!-- arrow -->
+        <div class="connector">
+          <div class="conn-line"></div>
+          <span class="conn-label">resolves</span>
+        </div>
+
+        <!-- CLOUDFRONT -->
+        <div class="node">
+          <div class="node-wrap">
+            <div class="node-box blue" data-tip="">
+              <div class="tooltip">Global CDN · enforces HTTPS<br>caches at 400+ edge locations</div>
+              <div class="node-icon">
+                <!-- Edge/CDN network icon -->
+                <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="22" cy="22" r="6" stroke="#4a9eff" stroke-width="2"/>
+                  <circle cx="8"  cy="12" r="3.5" stroke="#4a9eff" stroke-width="1.5"/>
+                  <circle cx="36" cy="12" r="3.5" stroke="#4a9eff" stroke-width="1.5"/>
+                  <circle cx="8"  cy="32" r="3.5" stroke="#4a9eff" stroke-width="1.5"/>
+                  <circle cx="36" cy="32" r="3.5" stroke="#4a9eff" stroke-width="1.5"/>
+                  <line x1="11" y1="14" x2="17" y2="18" stroke="#4a9eff" stroke-width="1" opacity="0.7"/>
+                  <line x1="33" y1="14" x2="27" y2="18" stroke="#4a9eff" stroke-width="1" opacity="0.7"/>
+                  <line x1="11" y1="30" x2="17" y2="26" stroke="#4a9eff" stroke-width="1" opacity="0.7"/>
+                  <line x1="33" y1="30" x2="27" y2="26" stroke="#4a9eff" stroke-width="1" opacity="0.7"/>
+                </svg>
+              </div>
+              <span class="node-name blue">CloudFront</span>
+            </div>
+          </div>
+          <span class="node-label">CDN + cache</span>
+        </div>
+
+        <!-- arrow -->
+        <div class="connector">
+          <div class="conn-line"></div>
+          <span class="conn-label">forwards</span>
+        </div>
+
+        <!-- ACM -->
+        <div class="node">
+          <div class="node-wrap">
+            <div class="node-box amber" data-tip="">
+              <div class="tooltip">Free SSL/TLS certificate<br>must be in us-east-1</div>
+              <div class="node-icon">
+                <!-- Certificate / lock icon -->
+                <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="10" y="20" width="24" height="17" rx="3" stroke="#ffb347" stroke-width="2"/>
+                  <path d="M15 20V15a7 7 0 0114 0v5" stroke="#ffb347" stroke-width="2" stroke-linecap="round"/>
+                  <circle cx="22" cy="29" r="3" fill="#ffb347"/>
+                  <line x1="22" y1="32" x2="22" y2="35" stroke="#ffb347" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <span class="node-name amber">ACM</span>
+            </div>
+          </div>
+          <span class="node-label">SSL · us-east-1</span>
+        </div>
+
+        <!-- arrow -->
+        <div class="connector">
+          <div class="conn-line"></div>
+          <span class="conn-label">via OAC</span>
+        </div>
+
+        <!-- OAC -->
+        <div class="node">
+          <div class="node-wrap">
+            <div class="node-box amber" data-tip="">
+              <div class="tooltip">Prevents S3 bucket leak<br>only CloudFront can read origin</div>
+              <div class="node-icon">
+                <!-- Shield icon -->
+                <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M22 6L36 12V24C36 32 22 40 22 40C22 40 8 32 8 24V12L22 6Z"
+                        stroke="#ffb347" stroke-width="2" stroke-linejoin="round"/>
+                  <path d="M16 22l4 4 8-8" stroke="#ffb347" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <span class="node-name amber">OAC</span>
+            </div>
+          </div>
+          <span class="node-label">origin access control</span>
+        </div>
+
+        <!-- arrow -->
+        <div class="connector">
+          <div class="conn-line"></div>
+          <span class="conn-label">private</span>
+        </div>
+
+        <!-- S3 -->
+        <div class="node">
+          <div class="node-wrap">
+            <div class="node-box lime" data-tip="">
+              <div class="tooltip">Private bucket · no public URL<br>serves index.html + assets</div>
+              <div class="node-icon">
+                <!-- Bucket / S3 icon -->
+                <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <ellipse cx="22" cy="13" rx="12" ry="5" stroke="#00d4d4" stroke-width="2"/>
+                  <line x1="10" y1="13" x2="10" y2="33" stroke="#00d4d4" stroke-width="2"/>
+                  <line x1="34" y1="13" x2="34" y2="33" stroke="#00d4d4" stroke-width="2"/>
+                  <ellipse cx="22" cy="33" rx="12" ry="5" stroke="#00d4d4" stroke-width="2"/>
+                  <ellipse cx="22" cy="21" rx="12" ry="4" stroke="#00d4d4" stroke-width="1"
+                           stroke-dasharray="3 3" opacity="0.5"/>
+                </svg>
+              </div>
+              <span class="node-name teal">S3 bucket</span>
+            </div>
+          </div>
+          <span class="node-label">private · static files</span>
+        </div>
+
+      </div><!-- .flow -->
+    </div><!-- .aws-frame -->
+
+    <!-- Meta row: legend + terraform -->
+    <div class="meta-row">
+      <div class="legend">
+        <div class="legend-item"><span class="legend-dot" style="background:var(--green)"></span>networking / DNS</div>
+        <div class="legend-item"><span class="legend-dot" style="background:var(--blue)"></span>delivery / CDN</div>
+        <div class="legend-item"><span class="legend-dot" style="background:var(--amber)"></span>security / certs</div>
+        <div class="legend-item"><span class="legend-dot" style="background:var(--teal)"></span>storage</div>
+      </div>
+      <div class="terraform-badge">
+        <!-- Terraform diamond icon -->
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <polygon points="3,2 8,0 8,7 3,9" fill="#a78bfa" opacity="0.8"/>
+          <polygon points="9,0 14,2 14,9 9,7" fill="#a78bfa"/>
+          <polygon points="3,10 8,8 8,15 3,13" fill="#a78bfa" opacity="0.6"/>
+        </svg>
+        Terraform IaC
+      </div>
+    </div>
+
+    <!-- Security note -->
+    <div class="security-note">
+      <strong>Security:</strong> S3 bucket has no public endpoint. All access is routed through CloudFront via OAC —
+      eliminating the risk of accidental data exposure via direct S3 URLs. ACM certificate is provisioned in
+      <code>us-east-1</code> (required by CloudFront). Least-privilege IAM policies enforced throughout.
+    </div>
+
+  </div><!-- .diagram-card -->
+
+</div>
+
+</body>
+</html>
