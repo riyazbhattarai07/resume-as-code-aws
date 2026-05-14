@@ -14,7 +14,7 @@ The infrastructure is designed for high availability and security, ensuring that
 Browser → Route 53 (DNS) + ACM (SSL) → CloudFront (CDN) → OAC → S3 (Private Bucket)
 ```
 
-> 📌 **Architecture diagram:** *(Add your diagram here — recommended tools: [CloudSkew](https://www.cloudskew.com/) or [Lucidchart](https://lucidchart.com). Export as PNG and embed with `![Architecture](./docs/architecture.png)`)*
+> 📌 **Architecture diagram:** [View Interactive Architecture Diagram](./aws-resume-architecture.html)
 
 * **Storage:** AWS S3 (Static Website Hosting)
 * **Content Delivery:** AWS CloudFront (CDN)
