@@ -18,6 +18,8 @@ Browser → Route 53 (DNS) + ACM (SSL) → CloudFront (CDN) → OAC → S3 (Priv
 
 [![Architecture Diagram](https://img.shields.io/badge/Architecture-Interactive_Diagram-orange?style=for-the-badge&logo=amazonaws)](https://riyazbhattarai07.github.io/resume-as-code-aws/aws-resume-architecture.html)
 
+![Architecture Screenshot](Screenshot%202026-05-14%20144943.png)
+
 * **Storage:** AWS S3 (Static Website Hosting)
 * **Content Delivery:** AWS CloudFront (CDN)
 * **Security:** IAM Policies, CloudFront Origin Access Control (OAC), and AWS Certificate Manager (ACM)
