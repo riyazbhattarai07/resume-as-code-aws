@@ -4,12 +4,7 @@
 # ---------------------------------------------------------------------------
 
 variable "domain_name" {
-  description = "The root domain name managed in Route 53 (e.g. riyaz.dev)"
-  type        = string
-}
-
-variable "acm_certificate_arn" {
-  description = "ARN of the ACM SSL certificate provisioned in us-east-1 (required for CloudFront)"
+  description = "The root domain name managed in Route 53 (e.g. apple.dev)"
   type        = string
 }
 
