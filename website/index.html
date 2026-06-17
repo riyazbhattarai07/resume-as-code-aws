@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Riyaz Bhattarai — AWS Cloud & DevOps Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root,[data-theme="light"]{--color-bg:#f7f6f2;--color-surface:#f9f8f5;--color-surface-2:#fbfbf9;--color-surface-offset:#f3f0ec;--color-border:#d4d1ca;--color-text:#28251d;--color-text-muted:#7a7974;--color-text-faint:#bab9b4;--color-primary:#01696f;--color-primary-hover:#0c4e54;--color-divider:#dcd9d5;--shadow-md:0 4px 12px oklch(0.2 0.01 80/0.08);--radius-md:0.5rem;--radius-lg:0.75rem;--radius-xl:1rem;--font-body:'Inter',sans-serif;--font-mono:'JetBrains Mono',monospace}
+[data-theme="dark"]{--color-bg:#0f0e0c;--color-surface:#161514;--color-surface-2:#1c1b19;--color-surface-offset:#1d1c1a;--color-border:#393836;--color-text:#cdccca;--color-text-muted:#797876;--color-text-faint:#5a5957;--color-primary:#4f98a3;--color-primary-hover:#227f8b;--color-divider:#262523;--shadow-md:0 4px 12px oklch(0 0 0/0.3)}
+@media(prefers-color-scheme:dark){:root:not([data-theme]){--color-bg:#0f0e0c;--color-surface:#161514;--color-surface-2:#1c1b19;--color-surface-offset:#1d1c1a;--color-border:#393836;--color-text:#cdccca;--color-text-muted:#797876;--color-text-faint:#5a5957;--color-primary:#4f98a3;--color-primary-hover:#227f8b;--color-divider:#262523;--shadow-md:0 4px 12px oklch(0 0 0/0.3)}}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{min-height:100dvh;font-family:var(--font-body);font-size:clamp(1rem,.95rem + .25vw,1.125rem);color:var(--color-text);background:var(--color-bg);line-height:1.65}
+img,svg{display:block}
+button{cursor:pointer;background:none;border:none;font:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+.container{max-width:900px;margin-inline:auto;padding-inline:clamp(1rem,5vw,2.5rem)}
+/* NAV */
+nav{position:sticky;top:0;z-index:50;background:oklch(from var(--color-bg) l c h/0.88);backdrop-filter:blur(12px);border-bottom:1px solid oklch(from var(--color-text) l c h/0.08);padding-block:.875rem}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.nav-logo{display:flex;align-items:center;gap:.6rem;font-weight:600;font-size:.9rem;letter-spacing:-.01em}
+.nav-logo svg{flex-shrink:0}
+.nav-actions{display:flex;align-items:center;gap:.75rem}
+.btn-theme{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-md);color:var(--color-text-muted);transition:color .18s,background .18s}
+.btn-theme:hover{background:oklch(from var(--color-text) l c h/0.07);color:var(--color-text)}
+.btn-download{display:inline-flex;align-items:center;gap:.45rem;background:var(--color-primary);color:#fff;padding:.55rem 1.1rem;border-radius:var(--radius-md);font-size:.875rem;font-weight:600;transition:background .18s,transform .12s,box-shadow .18s;box-shadow:0 2px 8px oklch(from var(--color-primary) l c h/0.35)}
+.btn-download:hover{background:var(--color-primary-hover);transform:translateY(-1px);box-shadow:0 4px 14px oklch(from var(--color-primary) l c h/0.45)}
+.btn-download:active{transform:translateY(0)}
+/* HERO */
+.hero{padding-block:clamp(3rem,8vw,6rem) clamp(2.5rem,6vw,5rem);border-bottom:1px solid var(--color-divider)}
+.hero-eyebrow{font-family:var(--font-mono);font-size:.78rem;color:var(--color-primary);letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem}
+.hero-name{font-size:clamp(2.2rem,1rem+4vw,4rem);font-weight:700;line-height:1.08;letter-spacing:-.03em;margin-bottom:1.1rem}
+.hero-name span{color:var(--color-primary)}
+.hero-sub{font-size:clamp(1rem,.95rem+.25vw,1.2rem);color:var(--color-text-muted);max-width:60ch;margin-bottom:2rem}
+.hero-badges{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:2.5rem}
+.badge{font-family:var(--font-mono);font-size:.72rem;font-weight:600;padding:.28rem .65rem;border-radius:var(--radius-md);background:oklch(from var(--color-primary) l c h/0.12);color:var(--color-primary);border:1px solid oklch(from var(--color-primary) l c h/0.22)}
+.hero-cta{display:flex;align-items:center;flex-wrap:wrap;gap:.75rem}
+.btn-primary{display:inline-flex;align-items:center;gap:.45rem;background:var(--color-primary);color:#fff;padding:.7rem 1.4rem;border-radius:var(--radius-md);font-size:.9rem;font-weight:600;transition:background .18s,transform .12s,box-shadow .18s;box-shadow:0 2px 8px oklch(from var(--color-primary) l c h/0.35)}
+.btn-primary:hover{background:var(--color-primary-hover);transform:translateY(-1px)}
+.btn-primary:active{transform:translateY(0)}
+.btn-outline{display:inline-flex;align-items:center;gap:.45rem;padding:.7rem 1.4rem;border-radius:var(--radius-md);font-size:.9rem;font-weight:500;border:1px solid oklch(from var(--color-text) l c h/0.18);color:var(--color-text-muted);transition:border-color .18s,color .18s,background .18s}
+.btn-outline:hover{border-color:var(--color-primary);color:var(--color-primary);background:oklch(from var(--color-primary) l c h/0.06)}
+/* SECTIONS */
+.section{padding-block:clamp(2.5rem,6vw,4.5rem)}
+.section+.section{border-top:1px solid var(--color-divider)}
+.section-label{font-family:var(--font-mono);font-size:.72rem;color:var(--color-text-faint);letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.5rem}
+.section-title{font-size:clamp(1.2rem,1rem+1vw,1.6rem);font-weight:700;letter-spacing:-.02em;margin-bottom:.5rem}
+/* RESUME CARD */
+.resume-card{background:var(--color-surface);border:1px solid oklch(from var(--color-text) l c h/0.08);border-radius:var(--radius-xl);padding:clamp(1.5rem,4vw,2.5rem);box-shadow:var(--shadow-md)}
+.resume-header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.resume-title{font-weight:700;font-size:1rem;margin-bottom:.2rem}
+.resume-meta{font-size:.8rem;color:var(--color-text-muted);font-family:var(--font-mono)}
+.resume-preview{background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-bottom:1.5rem;font-size:.83rem;color:var(--color-text-muted);line-height:1.7}
+.resume-preview strong{color:var(--color-text);display:block;margin-bottom:.3rem;font-size:.78rem;text-transform:uppercase;letter-spacing:.07em;font-family:var(--font-mono)}
+.resume-preview p+strong{margin-top:.85rem}
+.resume-footer{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+/* SKILLS GRID */
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(240px,100%),1fr));gap:1rem}
+.skill-card{background:var(--color-surface);border:1px solid oklch(from var(--color-text) l c h/0.07);border-radius:var(--radius-lg);padding:1.1rem 1.25rem}
+.skill-card h4{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--color-primary);font-family:var(--font-mono);margin-bottom:.6rem}
+.skill-list{list-style:none;font-size:.85rem;color:var(--color-text-muted);display:flex;flex-wrap:wrap;gap:.35rem}
+.skill-list li{background:oklch(from var(--color-text) l c h/0.06);padding:.18rem .5rem;border-radius:4px}
+/* PROJECTS */
+.projects-list{display:flex;flex-direction:column;gap:1rem}
+.project-card{background:var(--color-surface);border:1px solid oklch(from var(--color-text) l c h/0.07);border-radius:var(--radius-lg);padding:1.25rem 1.5rem;transition:border-color .2s,box-shadow .2s}
+.project-card:hover{border-color:oklch(from var(--color-primary) l c h/0.4);box-shadow:var(--shadow-md)}
+.project-header{display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem;flex-wrap:wrap;margin-bottom:.5rem}
+.project-title{font-weight:700;font-size:.95rem}
+.project-stack{font-family:var(--font-mono);font-size:.72rem;color:var(--color-text-faint)}
+.project-desc{font-size:.87rem;color:var(--color-text-muted);line-height:1.65}
+/* CERTS */
+.certs-list{display:flex;flex-direction:column;gap:.75rem}
+.cert-item{display:flex;align-items:center;gap:.85rem;padding:.85rem 1rem;background:var(--color-surface);border:1px solid oklch(from var(--color-text) l c h/0.07);border-radius:var(--radius-lg)}
+.cert-icon{width:36px;height:36px;background:oklch(from var(--color-primary) l c h/0.12);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cert-icon svg{width:18px;height:18px;color:var(--color-primary)}
+.cert-name{font-weight:600;font-size:.87rem}
+.cert-date{font-size:.75rem;color:var(--color-text-muted);font-family:var(--font-mono)}
+/* FOOTER */
+footer{padding-block:2rem;border-top:1px solid var(--color-divider);text-align:center;font-size:.8rem;color:var(--color-text-faint)}
+.footer-links{display:flex;justify-content:center;gap:1.25rem;margin-bottom:.75rem}
+.footer-links a{color:var(--color-text-muted);font-size:.8rem;transition:color .18s}
+.footer-links a:hover{color:var(--color-primary)}
+@media(max-width:600px){.hero-cta{flex-direction:column;align-items:flex-start}.resume-header{flex-direction:column}.resume-footer{flex-direction:column}.nav-logo span{display:none}}
+</style>
+</head>
+<body>
+<nav>
+  <div class="container nav-inner">
+    <div class="nav-logo">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-label="RB logo">
+        <rect width="28" height="28" rx="7" fill="var(--color-primary)"/>
+        <text x="5" y="20" font-family="Inter,sans-serif" font-weight="700" font-size="14" fill="#fff">RB</text>
+      </svg>
+      <span>riyazbhattarai07</span>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-theme" data-theme-toggle aria-label="Toggle dark mode">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <a class="btn-download" href="https://raw.githubusercontent.com/riyazbhattarai07/resume-as-code-aws/main/website/Riyaz_Bhattarai_Resume.docx" download="Riyaz_Bhattarai_Resume.docx" target="_blank" rel="noopener noreferrer">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Resume
+      </a>
+    </div>
+  </div>
+</nav>
+
+<main>
+<div class="container">
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">// AWS Cloud &amp; DevOps Engineer</p>
+  <h1 class="hero-name">Riyaz <span>Bhattarai</span></h1>
+  <p class="hero-sub">AWS Certified Solutions Architect building resilient, scalable cloud infrastructure with Terraform, Kubernetes, and serverless AWS architectures. Based in Calgary, AB — open to Canadian opportunities.</p>
+  <div class="hero-badges">
+    <span class="badge">AWS SAA-C03</span>
+    <span class="badge">Cloud Practitioner</span>
+    <span class="badge">Terraform IaC</span>
+    <span class="badge">Kubernetes</span>
+    <span class="badge">CI/CD</span>
+    <span class="badge">Python</span>
+  </div>
+  <div class="hero-cta">
+    <a class="btn-primary" href="https://raw.githubusercontent.com/riyazbhattarai07/resume-as-code-aws/main/website/Riyaz_Bhattarai_Resume.docx" download="Riyaz_Bhattarai_Resume.docx" target="_blank" rel="noopener noreferrer">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download Resume
+    </a>
+    <a class="btn-outline" href="https://github.com/riyazbhattarai07" target="_blank" rel="noopener noreferrer">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      GitHub
+    </a>
+    <a class="btn-outline" href="mailto:riyazbhattarai07@gmail.com">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      Email Me
+    </a>
+  </div>
+</section>
+
+<!-- RESUME DOWNLOAD CARD -->
+<section class="section">
+  <p class="section-label">// Resume</p>
+  <div class="resume-card">
+    <div class="resume-header">
+      <div>
+        <div class="resume-title">Riyaz Bhattarai — AWS Solutions Architect Resume</div>
+        <div class="resume-meta">Updated June 2026 · .docx format</div>
+      </div>
+      <a class="btn-primary" href="https://raw.githubusercontent.com/riyazbhattarai07/resume-as-code-aws/main/website/Riyaz_Bhattarai_Resume.docx" download="Riyaz_Bhattarai_Resume.docx" target="_blank" rel="noopener noreferrer">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download .docx
+      </a>
+    </div>
+    <div class="resume-preview">
+      <strong>Professional Summary</strong>
+      <p>AWS-focused Cloud and DevOps Engineer and recent SAIT graduate, targeting Associate Solutions Architect and AWS Cloud Engineer roles in Canada. Partnered across teams to design and implement highly scalable, flexible, and resilient AWS cloud architectures using EC2, S3, Lambda, API Gateway, DynamoDB and more.</p>
+      <strong>Experience Highlights</strong>
+      <p><b>Cloud Platform Engineer</b> — Arc.dev (Contract-Remote) · Sept 2024 – Present · Calgary, AB<br>
+      Multi-tenant AWS infrastructure, IAM governance, Terraform IaC, CI/CD with GitLab, incident response via CloudWatch + Lambda.</p>
+      <p style="margin-top:.5rem"><b>AWS Infrastructure Support</b> — Arc.Dev · May 2022 – June 2024 · Kathmandu, Nepal<br>
+      EC2, S3, VPC, Lambda, RDS support; observability with Datadog, Prometheus, Grafana; VPC security hardening.</p>
+      <strong>Certifications</strong>
+      <p>AWS Certified Solutions Architect – Associate (May 2026) · AWS Certified Cloud Practitioner (Jan 2026)</p>
+    </div>
+    <div class="resume-footer">
+      <span style="font-size:.78rem;color:var(--color-text-faint);font-family:var(--font-mono)">riyazbhattarai07@gmail.com · Calgary, AB · 403-606-3418</span>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="section">
+  <p class="section-label">// Core Competencies</p>
+  <div class="skills-grid">
+    <div class="skill-card">
+      <h4>Cloud &amp; IaC</h4>
+      <ul class="skill-list"><li>AWS EC2</li><li>S3</li><li>Lambda</li><li>VPC</li><li>IAM</li><li>RDS</li><li>CloudFront</li><li>Route 53</li><li>ALB</li><li>Auto Scaling</li><li>Terraform</li><li>Ansible</li></ul>
+    </div>
+    <div class="skill-card">
+      <h4>DevOps &amp; CI/CD</h4>
+      <ul class="skill-list"><li>GitHub Actions</li><li>GitLab CI/CD</li><li>Jenkins</li><li>Docker</li><li>Kubernetes</li><li>Linux</li><li>Bash</li><li>Python</li></ul>
+    </div>
+    <div class="skill-card">
+      <h4>Observability</h4>
+      <ul class="skill-list"><li>Prometheus</li><li>Grafana</li><li>Datadog</li><li>CloudWatch</li><li>SNS</li><li>EventBridge</li></ul>
+    </div>
+    <div class="skill-card">
+      <h4>AI / ML</h4>
+      <ul class="skill-list"><li>Amazon SageMaker</li><li>Amazon Bedrock</li><li>Vertex AI</li><li>NLP Prototypes</li><li>Claude API</li><li>GitHub Copilot</li></ul>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="section">
+  <p class="section-label">// Featured Projects</p>
+  <div class="projects-list">
+    <div class="project-card">
+      <div class="project-header">
+        <div class="project-title">Zero-Ops Event Ticket Platform</div>
+        <a href="https://github.com/riyazbhattarai07/Zero-Ops-Event-Ticket-Platform" target="_blank" rel="noopener noreferrer" style="color:var(--color-primary);font-size:.8rem;font-family:var(--font-mono)">→ GitHub</a>
+      </div>
+      <div class="project-stack">AWS · Lambda · SQS · DynamoDB · EventBridge · Terraform</div>
+      <p class="project-desc" style="margin-top:.5rem">Transaction-safe serverless ticketing backend handling high-concurrency spike traffic with zero data corruption via DynamoDB atomic writes and idempotent Lambda handlers. Self-scaling to absolute zero during idle periods.</p>
+    </div>
+    <div class="project-card">
+      <div class="project-header">
+        <div class="project-title">Autonomous Cloud Chaos &amp; DR System</div>
+        <a href="https://github.com/riyazbhattarai07/autonomous-cloud-chaos-dr" target="_blank" rel="noopener noreferrer" style="color:var(--color-primary);font-size:.8rem;font-family:var(--font-mono)">→ GitHub</a>
+      </div>
+      <div class="project-stack">AWS FIS · Route 53 · Lambda · EventBridge · Systems Manager · Terraform</div>
+      <p class="project-desc" style="margin-top:.5rem">Automated chaos experiments and multi-region failover logic achieving automated RTO under 2 minutes. Uses AWS Fault Injection Simulator to safely inject failures and trigger autonomous topology rollbacks.</p>
+    </div>
+    <div class="project-card">
+      <div class="project-header">
+        <div class="project-title">Global Edge-Accelerated Media Pipeline</div>
+        <a href="https://github.com/riyazbhattarai07/global-edge-media-engine" target="_blank" rel="noopener noreferrer" style="color:var(--color-primary);font-size:.8rem;font-family:var(--font-mono)">→ GitHub</a>
+      </div>
+      <div class="project-stack">Global Accelerator · CloudFront · Step Functions · MediaConvert · Fargate · Terraform</div>
+      <p class="project-desc" style="margin-top:.5rem">Multi-stage media processing pipeline with edge-accelerated ingestion and dynamic Fargate auto-scaling driven by CloudWatch queue depth metrics for high-throughput, cost-controlled processing.</p>
+    </div>
+    <div class="project-card">
+      <div class="project-header">
+        <div class="project-title">Serverless Mood Bot</div>
+        <a href="https://github.com/riyazbhattarai07/serverless-mood-bot" target="_blank" rel="noopener noreferrer" style="color:var(--color-primary);font-size:.8rem;font-family:var(--font-mono)">→ GitHub</a>
+      </div>
+      <div class="project-stack">API Gateway · Lambda · EventBridge · DynamoDB · SNS/SQS · Vertex AI · Terraform</div>
+      <p class="project-desc" style="margin-top:.5rem">Serverless mood analysis bot on AWS with AI-powered coping suggestions via Vertex AI. Full IaC with Terraform.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section class="section">
+  <p class="section-label">// Certifications &amp; Education</p>
+  <div class="certs-list">
+    <div class="cert-item">
+      <div class="cert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-4.13-3.15-4.13 3.15a.5.5 0 0 1-.81-.47l1.515-8.526"/></svg></div>
+      <div><div class="cert-name">AWS Certified Solutions Architect – Associate</div><div class="cert-date">Earned May 2026</div></div>
+    </div>
+    <div class="cert-item">
+      <div class="cert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-4.13-3.15-4.13 3.15a.5.5 0 0 1-.81-.47l1.515-8.526"/></svg></div>
+      <div><div class="cert-name">AWS Certified Cloud Practitioner</div><div class="cert-date">Earned Jan 2026</div></div>
+    </div>
+    <div class="cert-item">
+      <div class="cert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+      <div><div class="cert-name">Business Administration Diploma — SAIT, Calgary, AB</div><div class="cert-date">Graduated April 2026</div></div>
+    </div>
+    <div class="cert-item">
+      <div class="cert-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+      <div><div class="cert-name">Higher Secondary Diploma (Computer Science) — Trinity International College, Kathmandu</div><div class="cert-date">Completed</div></div>
+    </div>
+  </div>
+</section>
+
+</div>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-links">
+      <a href="https://github.com/riyazbhattarai07" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="mailto:riyazbhattarai07@gmail.com">Email</a>
+      <a href="tel:+14036063418">403-606-3418</a>
+    </div>
+    <p>Riyaz Bhattarai · Calgary, AB · AWS Certified Solutions Architect</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var t=document.querySelector('[data-theme-toggle]'),r=document.documentElement;
+  var d=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';
+  r.setAttribute('data-theme',d);
+  if(t)t.addEventListener('click',function(){
+    d=d==='dark'?'light':'dark';
+    r.setAttribute('data-theme',d);
+    t.setAttribute('aria-label','Switch to '+(d==='dark'?'light':'dark')+' mode');
+    t.innerHTML=d==='dark'?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+  });
+})();
+</script>
+</body>
+</html>
